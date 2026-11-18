@@ -1,12 +1,15 @@
 import type { Metadata, Viewport } from 'next';
 import { Inter, Space_Grotesk } from 'next/font/google';
 
+import Footer from '@/components/footer/Footer';
 import Header from '@/components/header/Header';
 
+import { AuthProvider } from '@/providers/AuthProvider';
 import { RideProvider } from '@/providers/RideProvider';
 import { ThemeProvider } from '@/providers/ThemeProvider';
 
 import './globals.css';
+import './pages.css';
 
 export const metadata: Metadata = {
   title: 'DriveSAF — Chauffeur de remplacement à Ottawa–Gatineau',
@@ -32,10 +35,13 @@ export default function RootLayout({
     <html lang="fr-CA" className={`${inter.variable} ${spaceGrotesk.variable}`}>
       <body>
         <ThemeProvider>
-          <RideProvider>
-            <Header />
-            {children}
-          </RideProvider>
+          <AuthProvider>
+            <RideProvider>
+              <Header />
+              {children}
+              <Footer />
+            </RideProvider>
+          </AuthProvider>
         </ThemeProvider>
       </body>
     </html>

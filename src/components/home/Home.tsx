@@ -15,11 +15,11 @@ export default function Home() {
 
   return (
     <main>
-      <div className="wrap intro">
-        <h1>Rentrez chez vous, dans votre voiture</h1>
-        <p>
-          Un chauffeur vient à vous et vous ramène <b>dans votre propre voiture</b> quand vous ne pouvez pas conduire.
-          Prototype de démonstration.
+      <div className="wrap page-head">
+        <h1>Démo : client et chauffeur</h1>
+        <p className="muted">
+          Les deux écrans côte à côte, sans compte. Choisissez un permis côté chauffeur et appuyez sur <b>Go</b>, puis
+          commandez côté client. Sinon, un chauffeur simulé accepte la course.
         </p>
       </div>
 

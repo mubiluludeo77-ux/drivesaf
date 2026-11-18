@@ -7,13 +7,25 @@ import { useRide } from '@/providers/RideProvider';
 import { fuelLabel, money } from '@/utils/pricing';
 import type { LicenceCode } from '@/types/ride';
 
-export default function DriverScreen({ visible }: { visible: boolean }) {
+type Props = {
+  visible: boolean;
+  /** Permis du compte connecté : remplace le choix manuel (page Espace chauffeur) */
+  lockedLicence?: LicenceCode;
+};
+
+export default function DriverScreen({ visible, lockedLicence }: Props) {
   const { state, actions } = useRide();
-  const { status, order: o, progress, driverOnline, driverLicence, realDriver: mine } = state;
+  const { status, order: o, progress, driverOnline, realDriver: mine } = state;
+  const driverLicence = lockedLicence ?? state.driverLicence;
 
   const busy = mine && status !== 'idle' && status !== 'done';
   const goDisabled = busy || (!driverOnline && !licenceOk(driverLicence));
   const badLicence = driverLicence !== '' && !licenceOk(driverLicence);
+
+  function toggleOnline() {
+    if (lockedLicence && state.driverLicence !== lockedLicence) actions.setLicence(lockedLicence);
+    actions.toggleOnline();
+  }
 
   return (
     <section className={`phone${visible ? ' show' : ''}`} id="driver" aria-label="Écran chauffeur">
@@ -33,13 +45,13 @@ export default function DriverScreen({ visible }: { visible: boolean }) {
             type="button"
             className={`btn ${driverOnline ? 'btn-secondary' : 'btn-success'}`}
             disabled={goDisabled}
-            onClick={actions.toggleOnline}
+            onClick={toggleOnline}
           >
             {driverOnline ? 'Pause' : 'Go'}
           </button>
         </div>
 
-        {!driverOnline && (
+        {!driverOnline && !lockedLicence && (
           <div className="card">
             <label htmlFor="licence">Votre permis de conduire</label>
             <select
