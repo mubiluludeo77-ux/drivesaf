@@ -1,0 +1,55 @@
+﻿Issue Id,Issue Type,Summary,Description,Priority,Story Points,Sprint,Parent Id,Labels
+E1,Epic,Fondations du projet,"Projet Next.js 16 + TypeScript, base de données PostgreSQL (Supabase, région Canada), déploiement, CI.",High,,,,drivesaf
+1,Task,Mettre en place le projet Next.js comme le portfolio,"Next.js 16, React 19, TypeScript, ESLint. Structure src/app, src/components, src/data, src/types, src/providers.",Highest,2,Sprint 1,E1,drivesaf sprint-1
+2,Task,Créer le projet Supabase (région ca-central-1),"Base PostgreSQL hébergée au Canada (Loi 25 / LPRPDE). Activer PostGIS. Variables dans .env.local, .env.example à jour.",Highest,2,Sprint 1,E1,drivesaf sprint-1
+3,Task,Créer le schéma de base de données v1,"Tables : profiles, vehicles, drivers, driver_documents, service_sectors, rides, ride_events, payments, ratings. Migrations versionnées dans supabase/migrations.",Highest,5,Sprint 1,E1,drivesaf sprint-1
+4,Task,Activer la sécurité par ligne (RLS) sur toutes les tables,Un client ne voit que ses courses ; un chauffeur ne voit que les demandes qui lui sont proposées et ses courses. Tests des règles.,Highest,3,Sprint 1,E1,drivesaf sprint-1
+5,Task,Déploiement sur Vercel + CI GitHub,"Déploiement automatique de main, préversion par pull request, lint + build + tests à chaque PR.",High,3,Sprint 1,E1,drivesaf sprint-1
+E2,Epic,Comptes et authentification,Inscription et connexion des clients et des chauffeurs.,High,,,,drivesaf
+6,Story,"En tant que client, je crée un compte avec mon téléphone","Connexion par code SMS (Supabase Auth). Nom, téléphone vérifié, courriel optionnel. Acceptation des conditions et de la politique de confidentialité.",Highest,5,Sprint 1,E2,drivesaf sprint-1
+7,Story,"En tant que chauffeur, je crée un compte chauffeur","Formulaire séparé : identité, adresse, date de naissance. Le compte reste « en attente » tant que la vérification n'est pas approuvée.",Highest,3,Sprint 2,E2,drivesaf sprint-2
+8,Story,"En tant qu'utilisateur, je gère mon profil","Modifier nom, photo, contacts d'urgence. Supprimer son compte (droit à l'effacement, Loi 25).",Medium,3,Sprint 6,E2,drivesaf sprint-6
+E3,Epic,Vérification des chauffeurs,"Permis G2 (ON) ou classe 5 probatoire (QC) minimum, antécédents judiciaires, dossier de conduite.",High,,,,drivesaf
+9,Story,"En tant que chauffeur, je téléverse mon permis","Photo recto/verso stockée dans Supabase Storage (privé). Classe obligatoire : G1 et apprenti QC refusés, G2/G/classe 5 probatoire/classe 5 acceptés.",Highest,5,Sprint 2,E3,drivesaf sprint-2
+10,Story,"En tant que chauffeur, je fournis mon dossier de conduite et mes antécédents",Relevé MTO (Ontario) ou SAAQ (Québec) + vérification d'antécédents judiciaires. Date d'expiration enregistrée.,High,3,Sprint 3,E3,drivesaf sprint-3
+11,Story,"En tant qu'admin, j'approuve ou je refuse un chauffeur","Page admin : liste des dossiers en attente, documents, bouton approuver / refuser avec motif. Le chauffeur est notifié.",Highest,5,Sprint 3,E3,drivesaf sprint-3
+12,Task,Bloquer automatiquement un permis expiré,Tâche planifiée quotidienne : un chauffeur dont un document expire passe hors ligne et reçoit un rappel 30 jours avant.,Medium,3,Sprint 6,E3,drivesaf sprint-6
+E4,Epic,Commande de course (client),Le client commande un chauffeur pour conduire sa propre voiture.,High,,,,drivesaf
+13,Story,"En tant que client, j'enregistre ma voiture","Marque, modèle, plaque, couleur, boîte auto/manuelle. Plusieurs voitures possibles.",High,3,Sprint 2,E4,drivesaf sprint-2
+14,Story,"En tant que client, je saisis départ et destination avec autocomplétion",Adresses réelles (API de géocodage). Refus hors zone Ottawa–Gatineau avec un message clair.,Highest,5,Sprint 2,E4,drivesaf sprint-2
+15,Story,"En tant que client, je vois le prix avant de commander","25 $ + 2,10 $/km, +20 % entre 22 h et 6 h, TVH 13 % (départ ON) ou TPS+TVQ 14,975 % (départ QC). Distance par la route via API d'itinéraire.",Highest,5,Sprint 2,E4,drivesaf sprint-2
+16,Story,"En tant que client, je déclare mon niveau de carburant","Minimum 1/4 de réservoir (ou 25 % de batterie) et autonomie ≥ distance × 1,3 + 20 km, sinon la commande est bloquée.",High,2,Sprint 2,E4,drivesaf sprint-2
+17,Story,"En tant que client, je commande et j'annule une course",Création de la course (statut searching). Annulation gratuite avant l'arrivée du chauffeur ; frais après un délai à définir.,Highest,3,Sprint 2,E4,drivesaf sprint-2
+18,Story,"En tant que client, je réserve une course à l'avance",Choisir une date et une heure (ex. avant une soirée). Rappel 30 min avant.,Low,5,Sprint 7,E4,drivesaf sprint-7
+E5,Epic,Mise en relation et suivi en temps réel,Trouver le chauffeur le plus proche et suivre sa position.,High,,,,drivesaf
+19,Story,"En tant que système, je propose la course au chauffeur le plus proche","Requête PostGIS sur les chauffeurs en ligne et approuvés. Délai de 20 s pour accepter, sinon chauffeur suivant.",Highest,8,Sprint 4,E5,drivesaf sprint-4
+20,Story,"En tant que client, je vois le chauffeur arriver sur une vraie carte","Position du chauffeur envoyée toutes les 5 s (Supabase Realtime), carte interactive, temps d'arrivée estimé.",Highest,8,Sprint 4,E5,drivesaf sprint-4
+21,Story,"En tant que client, je suis le trajet jusqu'à destination",Statuts enroute → arrived → trip → dropoff → done enregistrés dans ride_events avec l'heure.,High,5,Sprint 4,E5,drivesaf sprint-4
+22,Task,Notifications push (web),"Chauffeur trouvé, chauffeur arrivé, course terminée. Nouvelle demande pour le chauffeur.",High,5,Sprint 4,E5,drivesaf sprint-4
+E6,Epic,Application chauffeur,Tout ce que le chauffeur fait pendant son service.,High,,,,drivesaf
+23,Story,"En tant que chauffeur, je passe en ligne et hors ligne",Seulement si le compte est approuvé et le permis valide. Partage de la position uniquement en ligne.,Highest,3,Sprint 3,E6,drivesaf sprint-3
+24,Story,"En tant que chauffeur, j'accepte ou je refuse une demande","Carte de la demande : secteurs, distance, voiture, boîte, carburant déclaré, gain (80 % avant taxes).",Highest,3,Sprint 4,E6,drivesaf sprint-4
+25,Story,"En tant que chauffeur, je démarre la course avec le code du client",Code à 4 chiffres + case « jauge vérifiée (≥ 1/4) » obligatoires. Bouton « carburant insuffisant » qui annule avec frais de déplacement.,Highest,3,Sprint 4,E6,drivesaf sprint-4
+26,Story,"En tant que chauffeur, je vois mes gains","Gains du jour, de la semaine, historique des courses et des versements.",Medium,3,Sprint 5,E6,drivesaf sprint-5
+E7,Epic,"Paiement, taxes et versements","Paiement par carte du client, versement aux chauffeurs.",High,,,,drivesaf
+27,Story,"En tant que client, j'enregistre une carte de paiement",Stripe (mode test d'abord). Aucune donnée de carte stockée chez nous.,Highest,5,Sprint 5,E7,drivesaf sprint-5
+28,Story,"En tant que client, je suis débité à la fin de la course","Préautorisation à la commande, capture à la fin. Reçu par courriel avec TVH ou TPS/TVQ et numéros de taxe.",Highest,5,Sprint 5,E7,drivesaf sprint-5
+29,Story,"En tant que chauffeur, je reçois mes gains chaque semaine",Stripe Connect : 80 % du prix avant taxes. Le chauffeur est travailleur autonome.,High,8,Sprint 5,E7,drivesaf sprint-5
+30,Task,Valider les règles de taxes avec un comptable,"Inscription TPS/TVH et TVQ, province applicable quand le trajet traverse la rivière, statut fiscal des chauffeurs.",Highest,1,Sprint 5,E7,drivesaf sprint-5
+31,Story,"En tant que client, je laisse un pourboire","Après la course : 0 %, 10 %, 15 %, 20 % ou montant libre. 100 % au chauffeur.",Low,2,Sprint 7,E7,drivesaf sprint-7
+E8,Epic,Sécurité,Protéger clients et chauffeurs.,High,,,,drivesaf
+32,Story,"En tant que client, je vérifie l'identité du chauffeur","Photo, nom, note, classe de permis affichés. Code de sécurité unique par course.",Highest,2,Sprint 4,E8,drivesaf sprint-4
+33,Story,"En tant qu'utilisateur, j'appelle le 911 avec le bouton SOS",Appel 911 + envoi de la position et des infos de la course à l'équipe sécurité.,Highest,3,Sprint 6,E8,drivesaf sprint-6
+34,Story,"En tant que client, je partage mon trajet avec un proche","Lien de suivi en direct temporaire, expire à la fin de la course.",High,3,Sprint 6,E8,drivesaf sprint-6
+35,Story,"En tant qu'utilisateur, j'appelle l'autre sans voir son numéro",Appel et SMS masqués (Twilio Proxy ou équivalent).,Medium,5,Sprint 6,E8,drivesaf sprint-6
+36,Story,"En tant qu'utilisateur, je note l'autre et je signale un problème","Note 1 à 5 étoiles + commentaire. Signalement envoyé à l'admin. Chauffeur sous 4,5 de moyenne : revue manuelle.",High,3,Sprint 6,E8,drivesaf sprint-6
+E9,Epic,Conformité et légal,"Assurance, règles des deux provinces, vie privée.",High,,,,drivesaf
+37,Task,Trouver une assurance pour les chauffeurs de remplacement,"Le chauffeur conduit la voiture du client : couverture responsabilité et dommages de la plateforme, en Ontario et au Québec.",Highest,3,Sprint 3,E9,drivesaf sprint-3
+38,Task,Confirmer les règles G2 / probatoire avec MTO et SAAQ,"Zéro alcool, restrictions de nuit pour les 19 ans et moins (G2), conduite interprovinciale. Fixer un âge minimum si nécessaire.",Highest,2,Sprint 3,E9,drivesaf sprint-3
+39,Task,Rédiger les conditions d'utilisation et la politique de confidentialité,Conforme à la Loi 25 (Québec) et à la LPRPDE. Nommer un responsable de la protection des renseignements personnels.,Highest,3,Sprint 6,E9,drivesaf sprint-6
+40,Task,Durée de conservation et suppression des données,"Positions GPS supprimées après 90 jours, documents des chauffeurs après la fin de leur contrat + délai légal.",High,2,Sprint 6,E9,drivesaf sprint-6
+E10,Epic,Lancement Ottawa–Gatineau,Bêta fermée puis ouverture au public.,High,,,,drivesaf
+41,Task,Recruter et vérifier 15 chauffeurs pour la bêta,"Les deux rives, disponibilités jeudi à samedi soir.",High,3,Sprint 7,E10,drivesaf sprint-7
+42,Task,Bêta fermée avec 50 clients,"Collecter les retours, mesurer temps d'attente, annulations, notes.",High,3,Sprint 7,E10,drivesaf sprint-7
+43,Task,Comparer nos tarifs avec la concurrence locale,Services de raccompagnement existants à Ottawa et Gatineau. Ajuster la base et le prix au km.,Medium,2,Sprint 7,E10,drivesaf sprint-7
+44,Task,Version anglaise de l'application,Ottawa est majoritairement anglophone : i18n français/anglais comme le portfolio.,High,5,Sprint 7,E10,drivesaf sprint-7
